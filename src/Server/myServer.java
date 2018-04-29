@@ -18,7 +18,7 @@ public class myServer extends Thread{
     private ServerSocket server;
     private String hostname = "localhost";
     private int port  = 20006;
-    private int TTL = 30;
+    protected static int TTL = 30;
     private Socket socket = null;
     private enum Operation {POST, GET, CLEAR;}
     public HashMap<Integer, Document> documentList = new HashMap<Integer, Document>();
@@ -41,7 +41,7 @@ public class myServer extends Thread{
         Options options = new Options();
 
         options.addOption("port", true, "server port, an integer");
-        options.addOption("TTL", false, "Time survival of document, an integer");
+        options.addOption("TTL", true, "Time survival of document, an integer");
 
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = parser.parse(options, args);
@@ -131,7 +131,7 @@ public class myServer extends Thread{
                     }
                     default:{
                         response.put("response", "error");
-                        response.put("errorMessage", "invalid Command");
+                        response.put("errorMessage", "invalid command");
                         out.writeUTF(response.toString());
                         break;
                     }

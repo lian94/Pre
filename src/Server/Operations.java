@@ -37,11 +37,11 @@ public class Operations {
                 }
             }catch(JsonSyntaxException j){
                 reply.put("response", "error");
-                reply.put("errorMessage", "missing document");
+                reply.put("errorMessage", "missing resource");
             }
         }else{
             reply.put("response", "error");
-            reply.put("errorMessage", "missing document");
+            reply.put("errorMessage", "missing resource");
         }
         out.writeUTF(reply.toString());
     }

@@ -1,7 +1,8 @@
 package Server;
 
 import Resource.Document;
-
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.HashMap;
 
 public class Function {
@@ -17,6 +18,8 @@ public class Function {
             return false;
         }else{
             docList.put(doc.getId(), doc);
+            Thread autodelete = new Thread(() -> timer(docList, doc.getId()));
+            autodelete.start();
             return true;
         }
     }
@@ -31,7 +34,30 @@ public class Function {
         if(docList.containsKey(id)){
             return docList.get(id).getMessage();
         }else{
-            throw new Exception("Document not found");
+            throw new Exception("Resource not found");
+        }
+    }
+
+    public static void timer(HashMap<Integer, Document> docList, int id) {
+
+        System.out.println("New timer scheduled for " + id);
+
+        Timer myTimer = new Timer();
+        myTimer.schedule(new AutoDelete(docList, id), 1000 * myServer.TTL);
+    }
+
+    static class AutoDelete extends TimerTask {
+        private HashMap<Integer, Document> docList;
+        private int id;
+        public AutoDelete(HashMap<Integer, Document> docList, int id){
+            this.docList = docList;
+            this.id = id;
+        }
+
+        public void run() {
+            System.out.println("Start automatic deletion:");
+            docList.remove(id);
+            System.out.println("Successfully delete document " + id);
         }
     }
 }
