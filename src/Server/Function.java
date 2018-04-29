@@ -39,11 +39,12 @@ public class Function {
 
         for(Document d: docList.getDocList()){
             if (d.getId() == doc.getId()){
-                toReturn.put(true, doc.getId().toString());
+                toReturn.put(true, d.getMessage());
                 return toReturn;
             }
         }
-        toReturn.put(true, "Document not found!");
+        toReturn.put(false, "Document not found!");
+        System.out.println(toReturn);
         return toReturn;
     }
 }

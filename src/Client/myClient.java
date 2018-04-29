@@ -40,10 +40,19 @@ public class myClient {
         System.out.println(cmd.hasOption("POST"));
 
         if (cmd.hasOption("POST")) {
-            System.out.println("post");
+            //System.out.println("post");
             try {
                 Operations.Post(cmd, c);
-                System.out.println("operation post");
+            } catch (JSONException e) {
+                System.out.println(e.getMessage());
+                System.exit(-1);
+            }
+        }
+
+        if (cmd.hasOption("GET")) {
+            //System.out.println("get");
+            try {
+                Operations.Get(cmd, c);
             } catch (JSONException e) {
                 System.out.println(e.getMessage());
                 System.exit(-1);

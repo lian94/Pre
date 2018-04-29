@@ -54,6 +54,7 @@ public class Operations {
         sentJSON.put("command", "GET");
         sentJSON.put("document", doc);
         c.sendJSON(sentJSON, cmd.getOptionValue("host"), cmd.getOptionValue("port"));
+        System.out.println(sentJSON);
         System.out.println("sent get json");
     }
 

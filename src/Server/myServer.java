@@ -22,6 +22,7 @@ public class myServer extends Thread{
     private Resource.documentList docList;
     private Socket socket = null;
     private enum Operation {POST, GET, CLEAR;}
+
     public myServer(String[] args){
         try {
             initialize(args);
@@ -35,7 +36,7 @@ public class myServer extends Thread{
         server.start();
     }
 
-    public  void initialize(String[] args)throws Exception {
+    public void initialize(String[] args)throws Exception {
         //set default parameters
         docList = new documentList();
         docList.initialDocList();
@@ -55,18 +56,6 @@ public class myServer extends Thread{
         }
 
         server = new ServerSocket(getPort());
-
-
-//        Socket client = server.accept();
-//        System.out.println("connection succeed !");
-//        if (client.isConnected()) {
-//            Server s = new Server(client, docList, getHostname(), getPort(), getTTL());
-//            s.run();
-//        } else {
-//            System.out.println("exit");
-//            client.close();
-//        }
-//        //server.close();
 
     }
     public void run(){
@@ -99,7 +88,6 @@ public class myServer extends Thread{
 
                 DataOutputStream out = new DataOutputStream(client.getOutputStream());
                 DataInputStream buf = new DataInputStream(client.getInputStream());
-                JsonReader request = new JsonReader(new InputStreamReader(client.getInputStream()));
 
                 try {
                     String str = buf.readUTF();
@@ -129,11 +117,18 @@ public class myServer extends Thread{
             if(root.has("command")){
                 String commandName = root.get("command").toString();
                 Operation operation = Operation.valueOf(commandName);
+                System.out.println("this is command" + commandName);
                 //check command and call corresponding method
                 switch(operation){
                     case POST:{
                         //check resource field exists
                         Operations.post(root, out, docList);
+                        break;
+                    }
+                    case GET:{
+                        //check resource field exists
+                        Operations.get(root, out, docList);
+                        System.out.println("get succeed");
                         break;
                     }
                     default:{

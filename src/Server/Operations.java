@@ -27,7 +27,7 @@ public class Operations {
                 int id = docInfo.getInt("id");
                 String msg = docInfo.getString("message");
                 Document doc = new Document(id, msg);
-                response = Function.get(doc, docList);
+                response = Function.post(doc, docList);
                 System.out.println("receive doc: " + id + msg);
                 if(response.containsKey(true)){
                     reply.put("response", "success");
@@ -56,12 +56,13 @@ public class Operations {
             try{
                 JSONObject docInfo = request.getJSONObject("document");
                 int id = docInfo.getInt("id");
-                String msg = docInfo.getString("message");
+                String msg = "";
                 Document doc = new Document(id, msg);
                 response = Function.get(doc, docList);
                 System.out.println("receive doc: " + id + msg);
                 if(response.containsKey(true)){
                     reply.put("response", "success");
+                    reply.put("message", response.get(true));
                 }
                 else{
                     reply.put("response", "error");
