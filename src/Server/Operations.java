@@ -21,12 +21,14 @@ public class Operations {
     throws IOException{
         JSONObject reply = new JSONObject();
         HashMap<Boolean, String> response = new HashMap<Boolean, String>();
-        if(request.has("POST")){
+        if(request.has("document")){
             try{
-                int id = request.getInt("id");
-                String msg = request.getString("message");
+                JSONObject docInfo = request.getJSONObject("document");
+                int id = docInfo.getInt("id");
+                String msg = docInfo.getString("message");
                 Document doc = new Document(id, msg);
                 response = Function.get(doc, docList);
+                System.out.println("receive doc: " + id + msg);
                 if(response.containsKey(true)){
                     reply.put("response", "success");
                 }

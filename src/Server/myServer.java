@@ -35,15 +35,16 @@ public class myServer {
             setPort(Integer.parseInt(cmd.getOptionValue("port")));
         }
         if (cmd.hasOption("TTL")) {
-                setTTL(Integer.parseInt(cmd.getOptionValue("TTL")));
+            setTTL(Integer.parseInt(cmd.getOptionValue("TTL")));
         }
 
         ServerSocket server = new ServerSocket(getPort());
-        System.out.println("wating");
+        System.out.println("waiting");
 
         Socket client = server.accept();
         System.out.println("connection succeed !");
         if (client.isConnected()) {
+            System.out.println("client is connected");
             Server s = new Server(client, docList, getHostname(), getPort(), getTTL());
             s.run();
         } else {

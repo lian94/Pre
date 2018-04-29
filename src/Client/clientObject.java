@@ -30,10 +30,14 @@ public class clientObject {
             output.writeUTF(j.toString());
             output.flush();
 
-            String response = "";
-            if(input.available() > 0){
-                response = input.readUTF();
-                System.out.println(response);
+            while(true){
+                String response = "";
+                if(input.available() > 0){
+                    System.out.println("input accepted");
+                    response = input.readUTF();
+                    System.out.println(response);
+                    break;
+                }
             }
 
         } catch (SocketException e) {

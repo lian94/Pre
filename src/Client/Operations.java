@@ -4,8 +4,6 @@ import org.apache.commons.cli.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
 public class Operations {
 
     /**
@@ -34,20 +32,29 @@ public class Operations {
         JSONObject doc = new JSONObject("{}");
         String id = getId(cmd);
         String msg = getMsg(cmd);
-        doc.put("id", id);
+        doc.put("id", Integer.parseInt(id));
         doc.put("message", msg);
         return doc;
     }
 
     public static void Post(CommandLine cmd, clientObject c) throws JSONException {
-
         JSONObject sentJSON = new JSONObject("{}");
         JSONObject doc = getDocument(cmd);
 
         sentJSON.put("command", "POST");
         sentJSON.put("document", doc);
         c.sendJSON(sentJSON, cmd.getOptionValue("host"), cmd.getOptionValue("port"));
+        System.out.println("sent post json");
+    }
 
+    public static void Get(CommandLine cmd, clientObject c) throws JSONException {
+        JSONObject sentJSON = new JSONObject("{}");
+        JSONObject doc = getDocument(cmd);
+
+        sentJSON.put("command", "GET");
+        sentJSON.put("document", doc);
+        c.sendJSON(sentJSON, cmd.getOptionValue("host"), cmd.getOptionValue("port"));
+        System.out.println("sent get json");
     }
 
 }

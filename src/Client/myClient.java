@@ -12,7 +12,9 @@ public class myClient {
 
         Options option = new Options();
         option.addOption("id", true, "document id");
-        option.addOption("post", false, "upload document");
+        option.addOption("message", true, "document message");
+        option.addOption("POST", false, "post document");
+        option.addOption("GET", false, "get document");
         option.addOption("host", true, "server host");
         option.addOption("port", true, "server port, an integer");
 
@@ -34,10 +36,14 @@ public class myClient {
         }
 
         clientObject c = new clientObject(serverIP, serverPort);
+        System.out.println("client object created");
+        System.out.println(cmd.hasOption("POST"));
 
         if (cmd.hasOption("POST")) {
+            System.out.println("post");
             try {
                 Operations.Post(cmd, c);
+                System.out.println("operation post");
             } catch (JSONException e) {
                 System.out.println(e.getMessage());
                 System.exit(-1);

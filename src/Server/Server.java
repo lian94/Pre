@@ -55,10 +55,9 @@ public class Server implements Runnable{
     }
 
 
-    private void parseJson(String  message, DataOutputStream out){
+    private void parseJson(String message, DataOutputStream out){
         JSONObject response = new JSONObject();
         try{
-
             JSONObject root = new JSONObject(message);
 
             if(root.has("command")){
