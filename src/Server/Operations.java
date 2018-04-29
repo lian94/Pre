@@ -1,7 +1,6 @@
 package Server;
 
 import Resource.Document;
-import Resource.documentList;
 import com.google.gson.JsonSyntaxException;
 import org.json.JSONObject;
 
@@ -17,10 +16,10 @@ public class Operations {
      * @param docList DocList stored on server side
      * @throws IOException
      */
-    public static void post(JSONObject request, DataOutputStream out, documentList docList)
+    public static void post(JSONObject request, DataOutputStream out, HashMap<Integer, Document> docList)
     throws IOException{
         JSONObject reply = new JSONObject();
-        HashMap<Boolean, String> response = new HashMap<Boolean, String>();
+        boolean response;
         if(request.has("document")){
             try{
                 JSONObject docInfo = request.getJSONObject("document");
@@ -29,18 +28,17 @@ public class Operations {
                 Document doc = new Document(id, msg);
                 response = Function.post(doc, docList);
                 System.out.println("receive doc: " + id + msg);
-                if(response.containsKey(true)){
+                if(response){
                     reply.put("response", "success");
                 }
                 else{
                     reply.put("response", "error");
-                    reply.put("errorMessage", response.get(false));
+                    reply.put("errorMessage", "Document id already existed");
                 }
             }catch(JsonSyntaxException j){
                 reply.put("response", "error");
                 reply.put("errorMessage", "missing document");
             }
-
         }else{
             reply.put("response", "error");
             reply.put("errorMessage", "missing document");
@@ -48,25 +46,22 @@ public class Operations {
         out.writeUTF(reply.toString());
     }
 
-    public static void get(JSONObject request, DataOutputStream out, documentList docList)
+    public static void get(JSONObject request, DataOutputStream out, HashMap<Integer, Document> docList)
             throws IOException{
         JSONObject reply = new JSONObject();
-        HashMap<Boolean, String> response = new HashMap<Boolean, String>();
+        String response;
         if(request.has("document")){
             try{
                 JSONObject docInfo = request.getJSONObject("document");
                 int id = docInfo.getInt("id");
                 String msg = "";
-                Document doc = new Document(id, msg);
-                response = Function.get(doc, docList);
-                System.out.println("receive doc: " + id + msg);
-                if(response.containsKey(true)){
+                try {
+                    response = Function.get(id, docList);
                     reply.put("response", "success");
-                    reply.put("message", response.get(true));
-                }
-                else{
+                    reply.put("message", response);
+                } catch(Exception e){
                     reply.put("response", "error");
-                    reply.put("errorMessage", response.get(false));
+                    reply.put("errorMessage", e.getMessage());
                 }
             }catch(JsonSyntaxException j){
                 reply.put("response", "error");

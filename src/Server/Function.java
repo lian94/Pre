@@ -1,7 +1,6 @@
 package Server;
 
 import Resource.Document;
-import Resource.documentList;
 
 import java.util.HashMap;
 
@@ -12,39 +11,27 @@ public class Function {
      * @param docList server maintained docList
      * @return success or error information
      */
-    public static HashMap<Boolean, String> post(Document doc, documentList docList){
-        HashMap<Boolean, String> toReturn = new HashMap<Boolean, String>();
-        for (Document d : docList.getDocList()) {
-            if (d.getId() == doc.getId()) {
-                //If the id existed, sever will deny the request
-                //Error message will be given
-                toReturn.put(false, "Document with same id already existed");
-                return toReturn;
-            }
+    public static boolean post(Document doc, HashMap<Integer, Document> docList){
+
+        if(docList.containsKey(doc.getId())){
+            return false;
+        }else{
+            docList.put(doc.getId(), doc);
+            return true;
         }
-        docList.addDoc(doc);
-        toReturn.put(true, "success");
-        return toReturn;
     }
 
     /**
      *
-     * @param doc Document info in JSON format
+     * @param id Document id
      * @param docList server maintained docList
      * @return success or error information
      */
-    public static HashMap<Boolean, String> get(Document doc, documentList docList){
-        HashMap<Boolean, String> toReturn = new HashMap<Boolean, String>();
-        toReturn.put(true, null);
-
-        for(Document d: docList.getDocList()){
-            if (d.getId() == doc.getId()){
-                toReturn.put(true, d.getMessage());
-                return toReturn;
-            }
+    public static String get(Integer id,  HashMap<Integer, Document> docList) throws Exception{
+        if(docList.containsKey(id)){
+            return docList.get(id).getMessage();
+        }else{
+            throw new Exception("Document not found");
         }
-        toReturn.put(false, "Document not found!");
-        System.out.println(toReturn);
-        return toReturn;
     }
 }

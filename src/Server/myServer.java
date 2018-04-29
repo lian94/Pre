@@ -1,14 +1,14 @@
 package Server;
 
-import Resource.documentList;
+import Resource.Document;
 import com.google.gson.JsonParseException;
-import com.google.gson.stream.JsonReader;
 import org.apache.commons.cli.*;
 import org.json.JSONObject;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
 
 import org.json.simple.parser.ParseException;
 
@@ -19,9 +19,9 @@ public class myServer extends Thread{
     private String hostname = "localhost";
     private int port  = 20006;
     private int TTL = 30;
-    private Resource.documentList docList;
     private Socket socket = null;
     private enum Operation {POST, GET, CLEAR;}
+    public HashMap<Integer, Document> documentList = new HashMap<Integer, Document>();
 
     public myServer(String[] args){
         try {
@@ -37,9 +37,7 @@ public class myServer extends Thread{
     }
 
     public void initialize(String[] args)throws Exception {
-        //set default parameters
-        docList = new documentList();
-        docList.initialDocList();
+
         Options options = new Options();
 
         options.addOption("port", true, "server port, an integer");
@@ -122,12 +120,12 @@ public class myServer extends Thread{
                 switch(operation){
                     case POST:{
                         //check resource field exists
-                        Operations.post(root, out, docList);
+                        Operations.post(root, out, documentList);
                         break;
                     }
                     case GET:{
                         //check resource field exists
-                        Operations.get(root, out, docList);
+                        Operations.get(root, out, documentList);
                         System.out.println("get succeed");
                         break;
                     }
