@@ -10,5 +10,9 @@
     <orderEntry type="library" name="gson-2.6.2" level="project" />
     <orderEntry type="library" name="json-20160810" level="project" />
     <orderEntry type="library" name="commons-cli-1.4 (2)" level="project" />
+    <orderEntry type="library" name="json-simple-1.1.1-sources" level="project" />
+    <orderEntry type="library" name="json-simple-1.1" level="project" />
+    <orderEntry type="library" name="json-simple-2.1.2" level="project" />
+    <orderEntry type="library" name="Json" level="project" />
   </component>
 </module>
