@@ -8,7 +8,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
-
+import java.util.Scanner;
 import org.json.simple.parser.ParseException;
 
 public class myServer extends Thread{
@@ -52,6 +52,11 @@ public class myServer extends Thread{
         }catch(Exception e){
             e.getStackTrace();
         }
+        Scanner sc = new Scanner(System.in);
+        Thread scannerlistener = new Thread(()-> {
+            scannerListening(sc);
+        });
+        scannerlistener.start();
         server = new ServerSocket(getPort());
     }
 
@@ -108,6 +113,18 @@ public class myServer extends Thread{
             }
         }
 
+    }
+
+    public void scannerListening(Scanner sc){
+        while(true){
+            String consoleCommand = sc.nextLine();
+            if(consoleCommand.toLowerCase().equals("clear")){
+                this.documentList = new HashMap<Integer, Document>();
+                System.out.println("All resources cleared");
+            }else{
+                System.out.println("Invalid command");
+            }
+        }
     }
 
     /**

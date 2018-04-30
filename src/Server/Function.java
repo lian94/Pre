@@ -59,7 +59,7 @@ public class Function {
         }
 
         public void run() {
-            System.out.println("Start automatic deletion:");
+            //System.out.println("Start automatic deletion:");
             docList.remove(id);
             System.out.println("Successfully delete document " + id);
         }
