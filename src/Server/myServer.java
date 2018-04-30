@@ -2,7 +2,6 @@ package Server;
 
 import Resource.Document;
 import com.google.gson.JsonParseException;
-import org.apache.commons.cli.*;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -27,37 +26,40 @@ public class myServer extends Thread{
         try {
             initialize(args);
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
+
     public static void main(String[] args)throws Exception{
         myServer server = new myServer(args);
         server.start();
     }
 
+    /**
+     * set the ttl and create a server socket
+     * @param args input from server side
+     */
     public void initialize(String[] args)throws Exception {
-
-        Options options = new Options();
-
-        options.addOption("port", true, "server port, an integer");
-        options.addOption("TTL", true, "Time survival of document, an integer");
-
-        CommandLineParser parser = new DefaultParser();
-        CommandLine cmd = parser.parse(options, args);
-
-        if (cmd.hasOption("port")) {
-            setPort(Integer.parseInt(cmd.getOptionValue("port")));
+        try{
+            if(args.length != 0){
+                if(args[0].equalsIgnoreCase("TTL")){
+                    setTTL(Integer.parseInt(args[1]));
+                }else{
+                    System.out.println("Invalid server command!");
+                    System.exit(-1);
+                }
+            }
+        }catch(Exception e){
+            e.getStackTrace();
         }
-        if (cmd.hasOption("TTL")) {
-            setTTL(Integer.parseInt(cmd.getOptionValue("TTL")));
-        }
-
         server = new ServerSocket(getPort());
-
     }
+
+    /**
+     * create thread pool to deal with multiple connections and requests
+     */
     public void run(){
-        System.out.println("waiting");
+        System.out.println("waiting for a client to connect");
         while (true) {
             try {
                 //wait for connection
@@ -67,7 +69,6 @@ public class myServer extends Thread{
                     try {
                         handler(socket);
                     } catch (Exception e) {
-                        // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
                 });
@@ -80,18 +81,20 @@ public class myServer extends Thread{
         }
     }
 
+    /**
+     * get the connection and read input then parse it to a function to receive output
+     * @param client client socket connection
+     */
     public void handler(Socket client) throws IOException, ParseException{
         try {
             if (!client.isClosed()) {
-
                 DataOutputStream out = new DataOutputStream(client.getOutputStream());
                 DataInputStream buf = new DataInputStream(client.getInputStream());
-
                 try {
                     String str = buf.readUTF();
                     parseJson(str, out);
                 } catch (IOException i) {
-                    // TODO: handle exception
+
                 } finally {
                     out.close();
                     client.close();
@@ -107,6 +110,12 @@ public class myServer extends Thread{
 
     }
 
+    /**
+     * receive the input from client and handle operations
+     * then return the result to client
+     * @param message in stream from client
+     * @param out out stream to client
+     */
     private void parseJson(String message, DataOutputStream out){
         JSONObject response = new JSONObject();
         try{
@@ -115,7 +124,6 @@ public class myServer extends Thread{
             if(root.has("command")){
                 String commandName = root.get("command").toString();
                 Operation operation = Operation.valueOf(commandName);
-                System.out.println("this is command" + commandName);
                 //check command and call corresponding method
                 switch(operation){
                     case POST:{
@@ -126,41 +134,40 @@ public class myServer extends Thread{
                     case GET:{
                         //check resource field exists
                         Operations.get(root, out, documentList);
-                        System.out.println("get succeed");
                         break;
                     }
                     default:{
-                        response.put("response", "error");
+                        response.put("error", "400");
                         response.put("errorMessage", "invalid command");
                         out.writeUTF(response.toString());
                         break;
                     }
                 }
             }else{
-                response.put("response", "error");
+                response.put("error", "400");
                 response.put("errorMessage", "missing or incorrect type for command");
                 try {
                     out.writeUTF(response.toString());
                 } catch (IOException e1) {
-                    // TODO Auto-generated catch block
+
                 }
             }
         }catch (JsonParseException e) {
-            // TODO: handle exception
-            response.put("response", "error");
+
+            response.put("error", "400");
             response.put("errorMessage", "missing or incorrect type for command");
             try {
                 out.writeUTF(response.toString());
             } catch (IOException e1) {
-                // TODO Auto-generated catch block
+
             }
         }catch (Exception e){
-            response.put("response", "error");
+            response.put("error", "400");
             response.put("errorMessage", "missing or incorrect type for command");
             try {
                 out.writeUTF(response.toString());
             } catch (IOException e1) {
-                // TODO Auto-generated catch block
+
             }
         }
     }

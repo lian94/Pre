@@ -38,13 +38,17 @@ public class Function {
         }
     }
 
+    /**
+     * Start a timer for each document
+     * @param docList
+     * @param id doc id
+     */
     public static void timer(HashMap<Integer, Document> docList, int id) {
-
-        System.out.println("New timer scheduled for " + id);
-
+        //System.out.println("New timer scheduled for " + id);
         Timer myTimer = new Timer();
         myTimer.schedule(new AutoDelete(docList, id), 1000 * myServer.TTL);
     }
+
 
     static class AutoDelete extends TimerTask {
         private HashMap<Integer, Document> docList;

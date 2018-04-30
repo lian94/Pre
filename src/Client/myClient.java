@@ -1,7 +1,7 @@
 package Client;
 
-import org.apache.commons.cli.*;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 public class myClient {
     public static void main(String[] args) throws JSONException {
@@ -10,49 +10,28 @@ public class myClient {
         Integer serverPort = 20006;
         String serverIP = "localhost";
 
-        Options option = new Options();
-        option.addOption("id", true, "document id");
-        option.addOption("message", true, "document message");
-        option.addOption("POST", false, "post document");
-        option.addOption("GET", false, "get document");
-        option.addOption("host", true, "server host");
-        option.addOption("port", true, "server port, an integer");
-
-        CommandLineParser parser = new DefaultParser();
-        CommandLine cmd = null;
-
-        try {
-            cmd = parser.parse(option, args);
-        } catch (ParseException e) {
-            System.out.println(e.getMessage());
-            System.exit(-1);
-        }
-
-        if (cmd.hasOption("host")) {
-            serverIP = cmd.getOptionValue("host");
-        }
-        if (cmd.hasOption("port")) {
-            serverPort = Integer.parseInt(cmd.getOptionValue("port"));
-        }
+        String action = args[0];
 
         clientObject c = new clientObject(serverIP, serverPort);
         System.out.println("client object created");
-        System.out.println(cmd.hasOption("POST"));
 
-        if (cmd.hasOption("POST")) {
-            //System.out.println("post");
+        if(action.equals("POST")){
+            String folder = args[1];
+            JSONObject docInfo = new JSONObject(args[2]);
             try {
-                Operations.Post(cmd, c);
+                Operations.Post(docInfo, c);
             } catch (JSONException e) {
                 System.out.println(e.getMessage());
                 System.exit(-1);
             }
         }
 
-        if (cmd.hasOption("GET")) {
-            //System.out.println("get");
+        if(action.equals("GET")){
             try {
-                Operations.Get(cmd, c);
+                String docInfo = args[1];
+                int split = docInfo.lastIndexOf('/');
+                String folder = docInfo.substring(0,split+1);
+                Operations.Get(Integer.parseInt(docInfo.substring(split+1)), c);
             } catch (JSONException e) {
                 System.out.println(e.getMessage());
                 System.exit(-1);

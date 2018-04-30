@@ -27,25 +27,32 @@ public class Operations {
                 String msg = docInfo.getString("message");
                 Document doc = new Document(id, msg);
                 response = Function.post(doc, docList);
-                System.out.println("receive doc: " + id + msg);
+                //System.out.println("receive doc: " + id + msg);
                 if(response){
-                    reply.put("response", "success");
+                    reply.put("success", "200");
                 }
                 else{
-                    reply.put("response", "error");
+                    reply.put("error", "4o4");
                     reply.put("errorMessage", "Document id already existed");
                 }
             }catch(JsonSyntaxException j){
-                reply.put("response", "error");
+                reply.put("error", "404");
                 reply.put("errorMessage", "missing resource");
             }
         }else{
-            reply.put("response", "error");
+            reply.put("response", "404");
             reply.put("errorMessage", "missing resource");
         }
         out.writeUTF(reply.toString());
     }
 
+    /**
+     *
+     * @param request Request from the client
+     * @param out Response to client
+     * @param docList DocList stored on server side
+     * @throws IOException
+     */
     public static void get(JSONObject request, DataOutputStream out, HashMap<Integer, Document> docList)
             throws IOException{
         JSONObject reply = new JSONObject();
@@ -57,19 +64,19 @@ public class Operations {
                 String msg = "";
                 try {
                     response = Function.get(id, docList);
-                    reply.put("response", "success");
+                    reply.put("success", "200");
                     reply.put("message", response);
                 } catch(Exception e){
-                    reply.put("response", "error");
+                    reply.put("error", "404");
                     reply.put("errorMessage", e.getMessage());
                 }
             }catch(JsonSyntaxException j){
-                reply.put("response", "error");
+                reply.put("response", "404");
                 reply.put("errorMessage", "missing document");
             }
 
         }else{
-            reply.put("response", "error");
+            reply.put("response", "404");
             reply.put("errorMessage", "missing document");
         }
         out.writeUTF(reply.toString());

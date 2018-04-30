@@ -32,12 +32,5 @@ public class Document {
         this.message = message;
     }
 
-    public HashMap<String, String > docToJSON(){
-        HashMap<String , String> map = new HashMap<String, String>();
-        map.put("id",this.getId().toString());
-        map.put("message",this.getMessage());
-        return map;
-    }
-
 
 }

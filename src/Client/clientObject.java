@@ -13,6 +13,11 @@ public class clientObject {
 
     private Socket s = null;
 
+    /**
+     * Start client socket bound to a specific server
+     * @param serverIP
+     * @param serverPort
+     */
     public clientObject(String serverIP, int serverPort) {
         try {
             s = new Socket(serverIP, serverPort);
@@ -22,7 +27,12 @@ public class clientObject {
     }
 
 
-    public void sendJSON(JSONObject j, String host, String port) throws JSONException {
+    /**
+     * write JSONObject to server end and receive input from server
+     * @param j user input JSONObject
+     * @throws JSONException
+     */
+    public void sendJSON(JSONObject j) throws JSONException {
         try {
             DataInputStream input = new DataInputStream(s.getInputStream());
             DataOutputStream output = new DataOutputStream(s.getOutputStream());
@@ -31,9 +41,9 @@ public class clientObject {
             output.flush();
 
             while(true){
-                String response = "";
+                String response;
                 if(input.available() > 0){
-                    System.out.println("input accepted");
+                    //System.out.println("input accepted");
                     response = input.readUTF();
                     System.out.println(response);
                     break;
