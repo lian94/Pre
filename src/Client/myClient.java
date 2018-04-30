@@ -9,7 +9,6 @@ public class myClient {
         //This is the default host host and port number
         Integer serverPort = 20006;
         String serverIP = "localhost";
-
         String action = args[0];
 
         clientObject c = new clientObject(serverIP, serverPort);
@@ -17,7 +16,10 @@ public class myClient {
 
         if(action.equals("POST")){
             String folder = args[1];
-            JSONObject docInfo = new JSONObject(args[2]);
+            String docJson = "";
+            for(int i = 2; i < args.length; i++)
+                docJson = docJson + args[i] + " ";
+            JSONObject docInfo = new JSONObject(docJson);
             try {
                 Operations.Post(docInfo, c);
             } catch (JSONException e) {

@@ -32,7 +32,7 @@ public class Operations {
                     reply.put("success", "200");
                 }
                 else{
-                    reply.put("error", "4o4");
+                    reply.put("error", "406");
                     reply.put("errorMessage", "Document id already existed");
                 }
             }catch(JsonSyntaxException j){

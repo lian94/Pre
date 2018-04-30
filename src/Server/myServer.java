@@ -19,7 +19,7 @@ public class myServer extends Thread{
     private int port  = 20006;
     protected static int TTL = 30;
     private Socket socket = null;
-    private enum Operation {POST, GET, CLEAR;}
+    private enum Operation {POST, GET}
     public HashMap<Integer, Document> documentList = new HashMap<Integer, Document>();
 
     public myServer(String[] args){
